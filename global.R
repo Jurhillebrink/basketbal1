@@ -17,7 +17,7 @@ drv <- JDBC("com.microsoft.sqlserver.jdbc.SQLServerDriver", "./opt/sqljdbc/sqljd
 #drv <- JDBC("com.microsoft.sqlserver.jdbc.SQLServerDriver", "C:/999 DB/20 Mijn MSSQLserver/sqljdbc4-2.0.jar")
 
 #connection with local server
-conn <- dbConnect(drv, "jdbc:sqlserver://localhost;databaseName=ztrieruc001;user=basketbal;password=password")
+conn <- dbConnect(drv, "jdbc:sqlserver://localhost;databaseName=ztrieruc001;user=basketbal;password=Password1!")
 
 #connection with online server
 #conn <- dbConnect(drv, "jdbc:sqlserver://145.92.162.226;databaseName=ztrieruc001;user=trieruc001;password=TTBGPfqU6gsOJG")

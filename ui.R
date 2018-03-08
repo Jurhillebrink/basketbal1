@@ -80,7 +80,7 @@ dashboardUI <<- fluidPage(
                       radioGroupButtons(inputId = "typeselector", 
                                         label = "Type", 
                                         status = "danger",
-                                        choices = setNames(c("free_throw","catch_throw","dribble"),c("Free throw","Catch & Shoot", "From dribble")),
+                                        choices = setNames(c("free_throw","catch_shoot","dribble"),c("Free throw","Catch & Shoot", "From dribble")),
                                         selected = "catch_throw"),
                       #map selector
                       img(
@@ -399,12 +399,12 @@ lastEventLayout <<- function(eventData, user){
         ),
         #total amount of shots
         box(
-          title = "Total made",width = 3, background = "red",
+          title = "Total shots",width = 3, background = "red",
           h2(sum(as.numeric(eventData$value)))
         ), 
         #total amount scored
         box(
-          title = "Total Taken",width = 3, background = "red",
+          title = "Shots made",width = 3, background = "red",
           h2(sum(as.numeric(eventData$value2)))
         ), 
         #total percentage of the whole team

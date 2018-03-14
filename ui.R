@@ -184,9 +184,15 @@ dashboardUI <<- fluidPage(
                         start = "2017-03-12",
                         end = format(Sys.Date(), format = "%Y-%m-%d")
                       ),
-                      selectInput("shotAnalysePosition", "Shot position:",
-                                  c(1:14))
-                    ),
+                      
+                      selectInput(
+                        "shotAnalysePosition", "Shot position:",
+                                  c(1:14)
+                      ),
+                      
+                      selectInput("shotAnalyseShotType", "Type of shot",
+                                  c("free_throw", "catch_throw", "dribble"))
+                    ), #end of box
                     #the bar chart
                     box(width = 12,
                         plotOutput("shotAnalyse"))
@@ -219,8 +225,12 @@ dashboardUI <<- fluidPage(
                         ),
                         multiple = TRUE,
                         selected = c("All")
-                      )
-                    ),
+                      ),
+                    
+                    
+                    selectInput("shotAnalyse2ShotType", "Type of shot",
+                                c("free_throw", "catch_throw", "dribble"))
+                  ), #end of box
                     #the bar chart
                     box(width = 12,
                         plotOutput("shotAnalyse2"))

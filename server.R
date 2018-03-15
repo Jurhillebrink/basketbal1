@@ -920,13 +920,17 @@ shinyServer(function(input, output, session) {
     # make plot
     output$shotAnalyse <- renderPlot({
       print(input$shotAnalyseDate)
+      print(input$shotAnalyseShotType)
       ggplot(rsShotResult[rsShotResult$fullname %in% input$shotAnalysePlayers
                           &
                             as.Date(rsShotResult$startdate) <= input$shotAnalyseDate[2]
                           &
                             as.Date(rsShotResult$startdate) >= input$shotAnalyseDate[1]
                           &
-                            rsShotResult$value3 == input$shotAnalysePosition, ],
+                            rsShotResult$value3 == input$shotAnalysePosition
+                          & 
+                            rsShotResult$value4 == input$shotAnalyseShotType
+                          , ],
              aes(x = starttime,
                  y = percentage,
                  fill = fullname)) +
@@ -956,7 +960,7 @@ shinyServer(function(input, output, session) {
       if ("Ouside Circle" %in% input$shotAnalyse2Position) {
         requestedPositions <- c(requestedPositions, positionsOutCircle)
       }
-      
+      print(rsShotResult)
       #select positions
       resultsOfRequestedPositions <-
         rsShotResult[rsShotResult$fullname %in% input$shotAnalyse2Players
@@ -965,7 +969,10 @@ shinyServer(function(input, output, session) {
                      &
                        as.Date(rsShotResult$starttime) >= input$shotAnalyse2Date[1]
                      &
-                       rsShotResult$value3 %in% requestedPositions, ]
+                       rsShotResult$value3 %in% requestedPositions
+                     & 
+                       rsShotResult$value4 == input$shotAnalyseShotType
+                     ,] #probleem met positions, omdat het nu bij alle positions moet staan. Moet or worden.
       if (nrow(resultsOfRequestedPositions) >= 1) {
         resultPerPosition <-
           with(resultsOfRequestedPositions,

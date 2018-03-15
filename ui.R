@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 #
 # This is the user-interface definition of a Shiny web application. You can
 # run the application by clicking 'Run App' above.
@@ -82,7 +82,7 @@ dashboardUI <<- fluidPage(
                                         label = "Type", 
                                         status = "danger",
                                         choices = setNames(c("free_throw","catch_shoot","dribble"),c("Free throw","Catch & Shoot", "From dribble")),
-                                        selected = "catch_throw"),
+                                        selected = "catch_shoot"),
                       #map selector
                       img(
                         id = "fieldImage",
@@ -192,7 +192,7 @@ dashboardUI <<- fluidPage(
                       ),
                       
                       selectInput("shotAnalyseShotType", "Type of shot",
-                                  c("free_throw", "catch_throw", "dribble"))
+                                  c("free_throw", "catch_shoot", "dribble"))
                     ), #end of box
                     #the bar chart
                     box(width = 12,
@@ -230,7 +230,7 @@ dashboardUI <<- fluidPage(
                     
                     
                     selectInput("shotAnalyse2ShotType", "Type of shot",
-                                c("free_throw", "catch_throw", "dribble"))
+                                c("free_throw", "catch_shoot", "dribble"))
                   ), #end of box
                     #the bar chart
                     box(width = 12,
@@ -503,9 +503,9 @@ playerHomeLayout <<- function(user){
             h1(textOutput("dribblePercentage")),
             h3(textOutput("dribbleCount"))),
         box(width = 4,
-            title = "Catch & Throw",
-            h1(textOutput("catchThrowPercentage")),
-            h3(textOutput("catchThrowCount")))
+            title = "Catch & Shoot",
+            h1(textOutput("catchShootPercentage")),
+            h3(textOutput("catchShootCount")))
       ),
       # compare to the team.
       h4("Compare to your team"),
@@ -513,8 +513,8 @@ playerHomeLayout <<- function(user){
       radioGroupButtons(inputId = "typeselectorHomeGraph", 
                         label = "Type", 
                         status = "danger",
-                        choices = setNames(c("free_throw","catch_throw","dribble"),c("Free throw","Catch & Shoot", "From dribble")),
-                        selected = "catch_throw"),
+                        choices = setNames(c("free_throw","catch_shoot","dribble"),c("Free throw","Catch & Shoot", "From dribble")),
+                        selected = "catch_shoot"),
       #plot graph
       fluidRow(
         box(
@@ -529,7 +529,7 @@ playerHomeLayout <<- function(user){
 
 renderTrainingSelector <<- function(x){
   return(selectInput("trainingselector", "Training", x, selected = 1))
-=======
+}
 #
 # This is the user-interface definition of a Shiny web application. You can
 # run the application by clicking 'Run App' above.
@@ -633,8 +633,8 @@ dashboardUI <<- fluidPage(
                       radioGroupButtons(inputId = "typeselector", 
                                         label = "Type", 
                                         status = "danger",
-                                        choices = setNames(c("free_throw","catch_throw","dribble"),c("Free throw","Catch & Shoot", "From dribble")),
-                                        selected = "catch_throw"),
+                                        choices = setNames(c("free_throw","catch_shoot","dribble"),c("Free throw","Catch & Shoot", "From dribble")),
+                                        selected = "catch_shoot"),
                       #map selector
                       img(
                         id = "fieldImage",
@@ -744,7 +744,7 @@ dashboardUI <<- fluidPage(
                       ),
                       
                       selectInput("shotAnalyseShotType", "Type of shot",
-                                  c("free_throw", "catch_throw", "dribble"))
+                                  c("free_throw", "catch_shoot", "dribble"))
                     ), #end of box
                     #the bar chart
                     box(width = 12,
@@ -782,7 +782,7 @@ dashboardUI <<- fluidPage(
                     
                     
                     selectInput("shotAnalyse2ShotType", "Type of shot",
-                                c("free_throw", "catch_throw", "dribble"))
+                                c("free_throw", "catch_shoot", "dribble"))
                   ), #end of box
                     #the bar chart
                     box(width = 12,
@@ -1065,9 +1065,9 @@ playerHomeLayout <<- function(user){
             h1(textOutput("dribblePercentage")),
             h3(textOutput("dribbleCount"))),
         box(width = 4,
-            title = "Catch & Throw",
-            h1(textOutput("catchThrowPercentage")),
-            h3(textOutput("catchThrowCount")))
+            title = "Catch & Shoot",
+            h1(textOutput("catchShootPercentage")),
+            h3(textOutput("catchShootCount")))
       ),
       # compare to the team.
       h4("Compare to your team"),
@@ -1075,8 +1075,8 @@ playerHomeLayout <<- function(user){
       radioGroupButtons(inputId = "typeselectorHomeGraph", 
                         label = "Type", 
                         status = "danger",
-                        choices = setNames(c("free_throw","catch_throw","dribble"),c("Free throw","Catch & Shoot", "From dribble")),
-                        selected = "catch_throw"),
+                        choices = setNames(c("free_throw","catch_shoot","dribble"),c("Free throw","Catch & Shoot", "From dribble")),
+                        selected = "catch_shoot"),
       #plot graph
       fluidRow(
         box(
@@ -1091,5 +1091,5 @@ playerHomeLayout <<- function(user){
 
 renderTrainingSelector <<- function(x){
   return(selectInput("trainingselector", "Training", x, selected = 1))
->>>>>>> master
+
 }

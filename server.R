@@ -24,7 +24,6 @@ source("./global.R")
 shinyServer(function(input, output, session) {
   #On app start
   observe({
-
     getShotResults()
     #Render the UI
     renderAdmin()
@@ -287,6 +286,7 @@ shinyServer(function(input, output, session) {
     
   })
   
+
   #to the next screen of test input
   observeEvent(input$switchtab, {
     if (!is.null(input$playersInEvent)) {
@@ -373,7 +373,6 @@ shinyServer(function(input, output, session) {
   observeEvent(input$closeTestEvent, {
     showModal(endSessionModal)
   })
-  
   #Hide the modal
   observeEvent(input$cancelEnd, {
     removeModal()
@@ -381,13 +380,18 @@ shinyServer(function(input, output, session) {
   
   #show players when a team is selected
   observeEvent(input$teamSelected,{
-    
+    result <- allTeams %>% select(teamid, teamcode) %>% filter(teamcode == input$teamSelected)
+    if(!empty(result)){
+     
+      updateSelectizeInput(session, "selectedPlayersInEvent", selected = playersFromTeam)
+    }
     
   })
   
   # refresh the player list in a event
   observeEvent(input$refreshPlayers, {
     getAllPlayers()
+    print(paste("latest event: ", latestEventid))
     query <- paste0(
       "exec GETPLAYERSINEVENT 
       @EVENTID = ?eventid"
@@ -433,25 +437,6 @@ shinyServer(function(input, output, session) {
           paste("Wrong password")
         })
     }
-    
-  })
-  
-  #add a player during an event
-  observeEvent(input$addPlayerInEvent, {
-    for (player in input$addPlayers){
-      query <- paste0(
-        "exec CREATEUSEREVENT 
-          @ACCOUNTID = ?accountid,
-          @EVENTID = ?eventid"
-      )
-      sql <- sqlInterpolate(conn, query, 
-                            accountid = player, 
-                            eventid = latestEventid)
-      dbSendUpdate(conn, sql)
-      playersInEvent <- append(playersInEvent, input$addPlayers)
-      renderPublicEvent()
-    }
-    
     
   })
   
@@ -722,6 +707,9 @@ shinyServer(function(input, output, session) {
     )
     sql <- sqlInterpolate(conn, query)
     latestEvent <- dbGetQuery(conn, sql)$eventid
+    
+    #latestEvent <- 401 #### REMOVE THIS LATER!!!!!!!! # this is done because there only is 1 legit event right now
+    
     eventData <- rsShotResult[rsShotResult$eventid == latestEvent,] # select dtata of last event
     
     # render the page
@@ -890,8 +878,7 @@ shinyServer(function(input, output, session) {
         theme(axis.text.x=element_text(angle = -45, hjust = 0))+
         scale_y_continuous(limits = c(0, 100))
     })
-    
-    
+
   }
   
   #RENDER THE ADMIN PAGE
@@ -912,7 +899,6 @@ shinyServer(function(input, output, session) {
       adminUiLayout(x)
     })
   }
-
   
   renderPublicEvent <- function() {
     print(paste("latest event: ", latestEventid))
@@ -922,15 +908,12 @@ shinyServer(function(input, output, session) {
     sql <- sqlInterpolate(conn, query)
     result <- dbGetQuery(conn, sql)
     
-    query <- paste0(
-      "exec GETPLAYERSINEVENT 
-      @EVENTID = ?eventid"
-    )
-    
-    sql <- sqlInterpolate(conn, query,
-                          eventid = result$eventid)
-    result <- dbGetQuery(conn, sql)
-    playersInEvent <<- as.numeric(result$accountid)
+    print(result)
+    playersInEvent <<- result$accountid
+    x <- result$accountid
+    print(paste("playersInEvent", playersInEvent))
+    print(paste("allplayers filtered met x: ", allPlayers[allPlayers$accountid %in% x, ]$firstname))
+    print("---")
     output$public_event <- renderUI({
       publicEventUiLayout(playersInEvent)
     })
@@ -999,7 +982,7 @@ shinyServer(function(input, output, session) {
                      &
                        rsShotResult$value3 %in% requestedPositions
                      & 
-                       rsShotResult$value4 == input$shotAnalyseShotType
+                       rsShotResult$value4 == input$shotAnalyse2ShotType
                      ,] #probleem met positions, omdat het nu bij alle positions moet staan. Moet or worden.
       if (nrow(resultsOfRequestedPositions) >= 1) {
         resultPerPosition <-
@@ -1118,7 +1101,6 @@ shinyServer(function(input, output, session) {
         labs(x = "", y = "", fill = "")
     })
   }
-
   
   # get all results
   getShotResults <- function(x){

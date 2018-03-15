@@ -121,6 +121,14 @@ getAllPlayers <- function(){
     setNames(as.numeric(allPlayers$accountid), allPlayers$fullname)
   
 }
+
+getAllTeams <- function(){
+  query <- paste0(
+    "exec GETTEAMLISt"
+  )
+  allTeams <<- dbGetQuery(conn, query)
+}
 getAllPlayers()
+getAllTeams()
 
 >>>>>>> master

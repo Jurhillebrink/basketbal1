@@ -380,11 +380,11 @@ shinyServer(function(input, output, session) {
   
   #show players when a team is selected
   observeEvent(input$teamSelected,{
-    result <- allTeams %>% select(teamid, teamcode) %>% filter(teamcode == input$teamSelected)
-    if(!empty(result)){
+    #result <- allTeams %>% select(teamid, teamcode) %>% filter(teamcode == input$teamSelected)
+    #if(!empty(result)){
      
-      updateSelectizeInput(session, "selectedPlayersInEvent", selected = playersFromTeam)
-    }
+      #updateSelectizeInput(session, "selectedPlayersInEvent", selected = playersFromTeam)
+    #}
     
   })
   

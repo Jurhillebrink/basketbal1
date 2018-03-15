@@ -9,6 +9,11 @@ library(plyr)
 
 options(java.parameters = "-Xmx2g")
 
+#run this in sqlserver to delete all test events, do not do this if there are more real events in the database!!!!
+#delete from testresult4values where eventid != 401
+#delete from userEvent where eventid != 401
+#delete from event where eventid != 401
+
 
 #driver on local pc
 drv <- JDBC("com.microsoft.sqlserver.jdbc.SQLServerDriver", "./opt/sqljdbc/sqljdbc4-2.0.jar")

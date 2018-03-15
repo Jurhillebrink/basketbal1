@@ -27,17 +27,17 @@ source("./global.R")
 #accountids <- rs$accountid
 #species <- data.frame(lastnames, accountids)
 #choicesSpecies <-
- # setNames(as.numeric(species$accountids), species$lastnames)
+#setNames(as.numeric(species$accountids), species$lastnames)
 
 
 dashboardUI <<- fluidPage(
+  includeCSS("www/myStyle.css"),
   style="overflow: auto; margin: 0; padding:0; width:100%;",
   align="center",
   #the js scripts
   tags$head(tags$script(src = "mapster.js")),
   tags$head(tags$script(src = "script.js")),
-    dashboardPage(
-      skin = "red",
+  dashboardPage(
       dashboardHeader(
         title = "CTO",
         tags$li(h5(""),
@@ -55,16 +55,37 @@ dashboardUI <<- fluidPage(
         tabItems(
           # select players for a session
           tabItem(tabName = "InvoerSchoten1",
-                  fluidPage(
-                  box(
-                    width = 6,
-                    selectizeInput(
-                      "playersInEvent",
-                      "Players",
-                      choices = allPlayerChoices,
-                      selected = allPlayers[1, "Playernames"],
-                      multiple = TRUE
-                    ),
+                  fluidRow(
+                    #input and filter options for the graph
+                    box(
+                      width = 6,
+                      selectizeInput(
+                        "teamSelected",
+                        "Team",
+                        choices = allTeams$teamcode,
+                        #choices = allPlayerChoices,
+                        multiple = FALSE,
+                        options = list(
+                          placeholder = 'Click here if you want to select a whole team',
+                          onInitialize = I('function() { this.setValue(""); }')
+                        )
+                      ),
+                        selectizeInput(
+                          "playersInEvent",
+                          "Players",
+                          choices = allPlayerChoices,
+                          selected = allPlayers[1, "Playernames"],
+                          multiple = TRUE,
+                          options = list(
+                            placeholder = 'Or select individual players',
+                            onInitialize = I('function() { this.setValue(""); }')
+                          )
+                        ),
+                  
+                  
+                  
+                  
+                  
                     actionButton('switchtab', 'Start event')
                   ))),
           # the actual shot event page
@@ -288,6 +309,7 @@ heatmapUiLayout <<- function(x){
 #Box to select a player in a public event
 publicEventUiLayout <<- function(x){
   return(
+    
     box(
       title = "Select Player",
       width = 4,
@@ -303,11 +325,20 @@ publicEventUiLayout <<- function(x){
         ,
         selected = as.numeric(x[1])
       ),
-      actionLink("refreshPlayers", icon("refresh")),# refresh the player list
+      selectizeInput(
+        "addPlayers",
+        "Select players to add",
+        choices = allPlayerChoices [! allPlayerChoices %in% as.numeric(playersInEvent)],
+        selected = allPlayers[1, "Playernames"],
+        multiple = TRUE
+      ),
+      actionButton('addPlayerInEvent', 'Add selected players'),
       hr(),
       # fluidRow(column(3, verbatimTextOutput("value")))
       actionButton("closeTestEvent", "End event")
-    )
+)
+      
+    
   )
 }
 
@@ -403,23 +434,23 @@ lastEventLayout <<- function(eventData, user){
       fluidRow(
         #list used positions
         box(
-          title = paste("Training",eventData[1,'startdate']),width = 3,
+          title = paste("Training",eventData[1,'startdate']),width = 3, background = "orange",
           "Positions: ", 
           paste(sort(unique(as.numeric(eventData$value3)), decreasing=FALSE), collapse=" ")
         ),
         #total amount of shots
         box(
-          title = "Total made",width = 3, background = "red",
+          title = "Total made",width = 3, background = "orange",
           h2(sum(as.numeric(eventData$value)))
         ), 
         #total amount scored
         box(
-          title = "Total Taken",width = 3, background = "red",
+          title = "Total Taken",width = 3, background = "orange",
           h2(sum(as.numeric(eventData$value2)))
         ), 
         #total percentage of the whole team
         box(
-          title = "Percentage",width = 3, background = "red",
+          title = "Percentage",width = 3, background = "orange",
           h2(
             paste(
               round((sum(as.numeric(eventData$value)) /sum(as.numeric(eventData$value2))*100),1)),"%") 
@@ -429,7 +460,7 @@ lastEventLayout <<- function(eventData, user){
       fluidRow(
         # choose a player
         box(
-          title = "Select player",width = 3, background = "red",
+          title = "Select player",width = 3, background = "orange",
           radioButtons("select_player_last_event", "",
                        choices=
                            unique(
@@ -446,8 +477,8 @@ lastEventLayout <<- function(eventData, user){
       fluidRow(
         # choose a position
         box(
-          title = "Pick position",width = 3, background = "red",
-          radioButtons("select_position_last_event", "",
+          title = "Pick position",width = 3, background = "orange",
+          radioButtons("select_position_last_event", "", 
                        choices=sort(
                          as.numeric(
                            unique(

@@ -1,3 +1,4 @@
+
 #connect to MySQL
 
 library(RJDBC)
@@ -8,6 +9,11 @@ library(shinydashboard)
 library(plyr)
 
 options(java.parameters = "-Xmx2g")
+
+#run this in sqlserver to delete all test events, do not do this if there are more real events in the database!!!!
+#delete from testresult4values where eventid != 401
+#delete from userEvent where eventid != 401
+#delete from event where eventid != 401
 
 
 #driver on local pc
@@ -55,5 +61,13 @@ getAllPlayers <- function(){
     setNames(as.numeric(allPlayers$accountid), allPlayers$fullname)
   
 }
+
+getAllTeams <- function(){
+  query <- paste0(
+    "exec GETTEAMLISt"
+  )
+  allTeams <<- dbGetQuery(conn, query)
+}
 getAllPlayers()
+getAllTeams()
 

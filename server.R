@@ -1,3 +1,4 @@
+
 #
 # This is the server logic of a Shiny web application. You can run the
 # application by clicking 'Run App' above.
@@ -175,7 +176,7 @@ shinyServer(function(input, output, session) {
   #Add the values to the modal dialog
   confirminputrender <- function(){
     titles <- c("Free throw","Catch & Shoot", "From dribble")
-    values <- c("free_throw","catch_throw","dribble")
+    values <- c("free_throw","catch_shoot","dribble")
     df <- data.frame(x = values,
     y = titles)
     
@@ -375,6 +376,16 @@ shinyServer(function(input, output, session) {
   #Hide the modal
   observeEvent(input$cancelEnd, {
     removeModal()
+  })
+  
+  #show players when a team is selected
+  observeEvent(input$teamSelected,{
+    result <- allTeams %>% select(teamid, teamcode) %>% filter(teamcode == input$teamSelected)
+    if(!empty(result)){
+     
+      updateSelectizeInput(session, "selectedPlayersInEvent", selected = playersFromTeam)
+    }
+    
   })
   
   # refresh the player list in a event
@@ -825,14 +836,14 @@ shinyServer(function(input, output, session) {
     })
     
     output$catchThrowPercentage <- renderText({
-      made  <- sum(as.integer(eventSubset[eventSubset$eventid == input$trainingselector & eventSubset$value4 == "catch_throw" ,]$value), na.rm = TRUE)
-      taken <- sum(as.integer(eventSubset[eventSubset$eventid == input$trainingselector & eventSubset$value4 == "catch_throw", ]$value2), na.rm = TRUE)
+      made  <- sum(as.integer(eventSubset[eventSubset$eventid == input$trainingselector & eventSubset$value4 == "catch_shoot" ,]$value), na.rm = TRUE)
+      taken <- sum(as.integer(eventSubset[eventSubset$eventid == input$trainingselector & eventSubset$value4 == "catch_shoot", ]$value2), na.rm = TRUE)
       percentage <- as.integer((made / taken) * 100)
       paste(percentage, "%", sep = "")
     })
     output$catchThrowCount <- renderText({
-      takenshots <- toString(sum(as.integer(eventSubset[eventSubset$eventid == input$trainingselector & eventSubset$value4 == "catch_throw", ]$value), na.rm = TRUE))
-      madeshots  <- toString(sum(as.integer(eventSubset[eventSubset$eventid == input$trainingselector & eventSubset$value4 == "catch_throw" ,]$value2), na.rm = TRUE))
+      takenshots <- toString(sum(as.integer(eventSubset[eventSubset$eventid == input$trainingselector & eventSubset$value4 == "catch_shoot", ]$value), na.rm = TRUE))
+      madeshots  <- toString(sum(as.integer(eventSubset[eventSubset$eventid == input$trainingselector & eventSubset$value4 == "catch_shoot" ,]$value2), na.rm = TRUE))
       paste(takenshots, "/", madeshots , sep = "")
     })
     
@@ -971,7 +982,7 @@ shinyServer(function(input, output, session) {
                      &
                        rsShotResult$value3 %in% requestedPositions
                      & 
-                       rsShotResult$value4 == input$shotAnalyseShotType
+                       rsShotResult$value4 == input$shotAnalyse2ShotType
                      ,] #probleem met positions, omdat het nu bij alle positions moet staan. Moet or worden.
       if (nrow(resultsOfRequestedPositions) >= 1) {
         resultPerPosition <-
@@ -1124,3 +1135,4 @@ shinyServer(function(input, output, session) {
       rsShotResult[rsShotResult$percentage <= 100,]#filter only viable percentage
   }
 })
+
